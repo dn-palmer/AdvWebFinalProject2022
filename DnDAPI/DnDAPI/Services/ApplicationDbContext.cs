@@ -12,7 +12,6 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<DungeonMaster> DungeonMasters => Set<DungeonMaster>();
     public DbSet<Player> Players => Set<Player>();
-    public DbSet<GamePreferences> GamePreferences => Set<GamePreferences>();
-
+    public DbSet<Campaign> Campaigns => Set<Campaign>();
 
 }

@@ -28,8 +28,9 @@ public interface IDnDRepository
     //**    Game Preference CRUD Opps happen beyond this point.      **
     //*****************************************************************
 
-    public Task<GamePreferences> CreatePreferencesAsync(GamePreferences gamePreferences);
-    public Task<GamePreferences> ReadPreferencesAsync(int userId);
-
-    public Task UpdatePrefrencesAsync(GamePreferences preferences);
+    public Task<Campaign> CreatePreferencesAsync(Campaign campaign);
+    public Task<Campaign> ReadCampaignAsync(int id);
+    public Task<ICollection<Campaign>> ReadAllCampaignsAsync();
+    Task<Campaign> CreateCampaignAsync(int dungeonMasterId, int playerId);
+    public Task UpdatePrefrencesAsync(Campaign campaign);
 }

@@ -8,8 +8,12 @@ public class Player
     public string LastName { get; set; } = String.Empty;
     public int YearsOfExperiance { get; set; } = 0;
     public string Email { get; set; } = String.Empty;
-    public GamePreferences? GamePreferences { get; set; }
-    public int? DungeonMasterId { get; set; }
-    public DungeonMaster? DungeonMaster { get; set; }
+    public bool? DungeonAndDragons1E { get; set; }
+    public bool? AdvancedDnD1E { get; set; }
+    public bool? AdvancedDnD2E { get; set; }
+    public bool? DungeonAndDragons3E { get; set; }
+    public bool? DungeonAndDragons4E { get; set; }
+    public bool? DungeonAndDragons5E { get; set; }
+    public ICollection<Campaign?> Campaigns { get; set; } = new List<Campaign?>();
 
 }

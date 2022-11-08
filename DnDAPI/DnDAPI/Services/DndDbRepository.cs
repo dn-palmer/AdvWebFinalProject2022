@@ -28,20 +28,19 @@ public class DndDbRepository : IDnDRepository
 
     public async Task<ICollection<DungeonMaster>> ReadAllDMAsync()
     {
-       return await _db.DungeonMasters.Include(p => p.Players).ToListAsync();
+       return await _db.DungeonMasters
+            .Include(c => c.Campaigns)
+            .ThenInclude(p => p.Player)
+            .ToListAsync();
     }
 
     public async Task<DungeonMaster> ReadDMAsync(int id)
     {
-        var dungeonMaster = await _db.DungeonMasters.FindAsync(id);
-
-        if(dungeonMaster != null)
-        {
-            dungeonMaster.GamePreferences = await ReadPreferencesAsync(id);
-            _db.Entry(dungeonMaster).Collection(p => p.Players).Load();                
-        }
-
-        return dungeonMaster;
+        return await _db.DungeonMasters
+            .Include(c => c.Campaigns)
+                .ThenInclude(p => p.Player)
+            .FirstOrDefaultAsync(d => d.Id == id);
+        
     }
 
     public async Task UpdateGMAsync(DungeonMaster dungeonMaster)
@@ -55,12 +54,17 @@ public class DndDbRepository : IDnDRepository
             dMToUpdate.LastName = dungeonMaster.LastName;
             dMToUpdate.YearsOfExperiance = dungeonMaster.YearsOfExperiance;
             dMToUpdate.Email = dungeonMaster.Email;
-            dMToUpdate.GamePreferences = dungeonMaster.GamePreferences;
-            dMToUpdate.Players = dungeonMaster.Players;
+            dMToUpdate.DungeonAndDragons1E = dungeonMaster.DungeonAndDragons1E;
+            dMToUpdate.AdvancedDnD1E = dungeonMaster.AdvancedDnD1E;
+            dMToUpdate.AdvancedDnD2E = dungeonMaster.AdvancedDnD2E;
+            dMToUpdate.DungeonAndDragons3E = dungeonMaster.DungeonAndDragons3E;
+            dMToUpdate.DungeonAndDragons4E = dungeonMaster.DungeonAndDragons4E;
+            dMToUpdate.DungeonAndDragons5E = dungeonMaster.DungeonAndDragons5E;
             await _db.SaveChangesAsync();
         }
     }
 
+    //This will change after I finish the many to many aspects
     public Task DeleteGMAsync(int id)
     {
         throw new NotImplementedException();
@@ -80,14 +84,17 @@ public class DndDbRepository : IDnDRepository
 
     public async Task<ICollection<Player>> ReadAllPlayersAsync()
     {
-       return await _db.Players.ToListAsync();
+       return await _db.Players.Include(c => c.Campaigns)
+            .ThenInclude(d => d.DungeonMaster)
+            .ToListAsync();
     }
 
     public async Task<Player> ReadPlayerAsync(int id)
     {
-      var player = await _db.Players.FindAsync(id);
-        player.GamePreferences = await ReadPreferencesAsync(id);
-      return player;
+        return await _db.Players.Include(c => c.Campaigns)
+                .ThenInclude(d => d.DungeonMaster)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
 
     }
 
@@ -103,21 +110,23 @@ public class DndDbRepository : IDnDRepository
             playerToUpdate.LastName = player.LastName;
             playerToUpdate.YearsOfExperiance = player.YearsOfExperiance;
             playerToUpdate.Email = player.Email;
-            playerToUpdate.GamePreferences = player.GamePreferences;
-            playerToUpdate.DungeonMasterId = player.DungeonMasterId;
-            playerToUpdate.DungeonMaster = player.DungeonMaster;        
+            playerToUpdate.DungeonAndDragons1E = player.DungeonAndDragons1E;
+            playerToUpdate.AdvancedDnD1E = player.AdvancedDnD1E;
+            playerToUpdate.AdvancedDnD2E = player.AdvancedDnD2E;
+            playerToUpdate.DungeonAndDragons3E = player.DungeonAndDragons3E;
+            playerToUpdate.DungeonAndDragons4E = player.DungeonAndDragons4E;
+            playerToUpdate.DungeonAndDragons5E = player.DungeonAndDragons5E;
             await _db.SaveChangesAsync();
         }
     }
 
+    //This will change after I finish the many to many aspects
     public async Task DeletePlayerAsync(int id)
     {
         var player = await ReadPlayerAsync(id);
        
         if(player != null)
-        {
-            var gamePreference = await _db.GamePreferences.FirstOrDefaultAsync(p => p.UserId == player.Id);
-            _db.GamePreferences.Remove(gamePreference);
+        {  
             _db.Players.Remove(player);
             await _db.SaveChangesAsync();
         }
@@ -128,33 +137,34 @@ public class DndDbRepository : IDnDRepository
     //**    Game Preference CRUD Opps happen beyond this point.      **
     //*****************************************************************
 
-    public async Task<GamePreferences> CreatePreferencesAsync(GamePreferences gamePreferences)
+    public async Task<Campaign> CreatePreferencesAsync(Campaign campaign)
     {
-        _db.GamePreferences.Add(gamePreferences);
+        _db.Campaigns.Add(campaign);
         await _db.SaveChangesAsync();
-        return gamePreferences;
+        return campaign;
     }
-    public async Task<GamePreferences> ReadPreferencesAsync(int userId)
+    public async Task<Campaign> ReadCampaignAsync(int id)
     {
-        return await _db.GamePreferences.FirstOrDefaultAsync(u => u.UserId == userId);
+        return await _db.Campaigns
+            .Include(p => p.Player)
+            .Include(d => d.DungeonMaster)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
-
-    public async Task UpdatePrefrencesAsync(GamePreferences preferences)
+    public async Task<ICollection<Campaign>> ReadAllCampaignsAsync()
     {
-        var preferenceToUpdate = await ReadPreferencesAsync(preferences.Id);
+        return await _db.Campaigns
+            .Include(p => p.Player)
+            .Include(d => d.DungeonMaster)
+            .ToListAsync();
 
-        if (preferenceToUpdate != null)
-        {
-            preferenceToUpdate.Id = preferences.Id;
-            preferenceToUpdate.UserId = preferences.UserId;
-            preferenceToUpdate.DungeonAndDragons1E = preferences.DungeonAndDragons1E;
-            preferenceToUpdate.AdvancedDnD1E = preferences.AdvancedDnD1E;
-            preferenceToUpdate.AdvancedDnD2E = preferences.AdvancedDnD2E;
-            preferenceToUpdate.DungeonAndDragons3E = preferences.DungeonAndDragons3E;
-            preferenceToUpdate.DungeonAndDragons4E = preferences.DungeonAndDragons4E;
-            preferenceToUpdate.DungeonAndDragons5E = preferences.DungeonAndDragons5E;
-            await _db.SaveChangesAsync();
-        }
+    }
+    public async Task UpdatePrefrencesAsync(Campaign campaign)
+    {
+
     }
 
+    public Task<Campaign> CreateCampaignAsync(int dungeonMasterId, int playerId)
+    {
+        throw new NotImplementedException();
+    }
 }

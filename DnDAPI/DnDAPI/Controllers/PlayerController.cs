@@ -33,7 +33,7 @@ namespace DnDAPI.Controllers
             //gets the game prefrence for each entry if it exists.
             foreach (var p in playerList)
             {
-                p.GamePreferences = await _repos.ReadPreferencesAsync(p.Id);
+                p.GamePreferences = await _repos.ReadCampaignAsync(p.Id);
             }
 
             return Ok(playerList);
