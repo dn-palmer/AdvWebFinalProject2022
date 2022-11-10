@@ -1,6 +1,6 @@
 ﻿namespace DnDAPI.Models.Entities;
 
-//Entitie for the dungen master entires in the db to establish the data needed for the table to be sucessful. 
+//Entity for the dungeon master entires in the db to establish the data needed for the table to be sucessful. 
 public class DungeonMaster
 {
     public int Id { get; set; }

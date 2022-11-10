@@ -1,6 +1,6 @@
 ﻿namespace DnDAPI.Models.Entities;
 
-//Player entitie to establish a palyer table in the db upon running a migration. 
+//Player entity to establish a palyer table in the db upon running a migration. 
 public class Player
 {
     public int Id { get; set; }

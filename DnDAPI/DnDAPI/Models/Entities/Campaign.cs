@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 
 namespace DnDAPI.Models.Entities;
-//Entitie to create a table that houses Dungeon Masters and Players prefered systems.
+//Entity to create a table that houses Dungeon Masters and Players prefered systems.
 public class Campaign
 {
     public int Id { get; set; }
@@ -12,7 +12,5 @@ public class Campaign
     public DungeonMaster? DungeonMaster { get; set; }
     public int PlayerId { get; set; }
     public Player? Player { get; set; }
-
-
 
 }

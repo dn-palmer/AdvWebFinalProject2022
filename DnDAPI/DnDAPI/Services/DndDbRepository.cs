@@ -1,5 +1,6 @@
 ﻿using DnDAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Versioning;
 using System.Numerics;
 
 namespace DnDAPI.Services;
@@ -23,24 +24,24 @@ public class DndDbRepository : IDnDRepository
         _db.DungeonMasters.Add(dungeonMaster);
         await _db.SaveChangesAsync();
         return dungeonMaster;
-        
+
     }
 
     public async Task<ICollection<DungeonMaster>> ReadAllDMAsync()
     {
-       return await _db.DungeonMasters
-            .Include(c => c.Campaigns)
-            .ThenInclude(p => p.Player)
-            .ToListAsync();
+        return await _db.DungeonMasters
+             .Include(c => c.Campaigns)
+             .ThenInclude(p => p.Player)
+             .ToListAsync();
     }
 
-    public async Task<DungeonMaster> ReadDMAsync(int id)
+    public async Task<DungeonMaster?> ReadDMAsync(int id)
     {
         return await _db.DungeonMasters
             .Include(c => c.Campaigns)
                 .ThenInclude(p => p.Player)
             .FirstOrDefaultAsync(d => d.Id == id);
-        
+
     }
 
     public async Task UpdateGMAsync(DungeonMaster dungeonMaster)
@@ -65,15 +66,21 @@ public class DndDbRepository : IDnDRepository
     }
 
     //This will change after I finish the many to many aspects
-    public Task DeleteGMAsync(int id)
+    public async Task DeleteGMAsync(int id)
     {
-        throw new NotImplementedException();
+        var dungeonMaster = await ReadDMAsync(id);
+
+        if (dungeonMaster != null)
+        {
+            _db.DungeonMasters.Remove(dungeonMaster);
+            await _db.SaveChangesAsync();
+        }
     }
 
     //*****************************************************************
     //**    Player CRUD Opps happen beyond this point.               **
     //*****************************************************************
-    
+
 
     public async Task<Player> CreatePlayerAsync(Player player)
     {
@@ -84,12 +91,12 @@ public class DndDbRepository : IDnDRepository
 
     public async Task<ICollection<Player>> ReadAllPlayersAsync()
     {
-       return await _db.Players.Include(c => c.Campaigns)
-            .ThenInclude(d => d.DungeonMaster)
-            .ToListAsync();
+        return await _db.Players.Include(c => c.Campaigns)
+             .ThenInclude(d => d.DungeonMaster)
+             .ToListAsync();
     }
 
-    public async Task<Player> ReadPlayerAsync(int id)
+    public async Task<Player?> ReadPlayerAsync(int id)
     {
         return await _db.Players.Include(c => c.Campaigns)
                 .ThenInclude(d => d.DungeonMaster)
@@ -103,7 +110,7 @@ public class DndDbRepository : IDnDRepository
     {
         var playerToUpdate = await ReadPlayerAsync(player.Id);
 
-        if(playerToUpdate != null)
+        if (playerToUpdate != null)
         {
             playerToUpdate.Id = player.Id;
             playerToUpdate.FirstName = player.FirstName;
@@ -124,9 +131,9 @@ public class DndDbRepository : IDnDRepository
     public async Task DeletePlayerAsync(int id)
     {
         var player = await ReadPlayerAsync(id);
-       
-        if(player != null)
-        {  
+
+        if (player != null)
+        {
             _db.Players.Remove(player);
             await _db.SaveChangesAsync();
         }
@@ -143,7 +150,7 @@ public class DndDbRepository : IDnDRepository
         await _db.SaveChangesAsync();
         return campaign;
     }
-    public async Task<Campaign> ReadCampaignAsync(int id)
+    public async Task<Campaign?> ReadCampaignAsync(int id)
     {
         return await _db.Campaigns
             .Include(p => p.Player)
@@ -158,13 +165,97 @@ public class DndDbRepository : IDnDRepository
             .ToListAsync();
 
     }
-    public async Task UpdatePrefrencesAsync(Campaign campaign)
+    public async Task UpdateCampaignAsync(Campaign campaign)
     {
+        var dungeonMaster = ReadDMAsync(campaign.DungeonMasterId);
+        //if player and dm are not found it terminates the method call.
+        if (dungeonMaster == null)
+        {
+            return;
+        }
+        var player = await ReadPlayerAsync(campaign.PlayerId);
+
+        if (player == null)
+        {
+            return;
+        }
+
+        var campaignToUpdate = await ReadCampaignAsync(campaign.Id);
+
+        campaignToUpdate.GameEdition = campaign.GameEdition;
+        campaignToUpdate.CampaignName = campaign.CampaignName;
+        campaignToUpdate.CampaignDescription = campaign.CampaignDescription;
+        campaignToUpdate.DungeonMasterId = campaign.DungeonMasterId;
+        campaignToUpdate.DungeonMaster = campaign.DungeonMaster;
+        campaignToUpdate.Player = campaign.Player;
+        campaignToUpdate.PlayerId = campaign.PlayerId;
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<Campaign?> CreateCampaignAsync(Campaign campaign)
+    {
+        var dungeonMaster = await ReadDMAsync(campaign.DungeonMasterId);
+
+        if (dungeonMaster == null)
+        {
+            return null;
+        }
+
+        var player = await ReadPlayerAsync(campaign.PlayerId);
+
+        if (player == null)
+        {
+            return null;
+        }
+        dungeonMaster.Campaigns.Add(campaign);
+        player.Campaigns.Add(campaign);
+        await _db.SaveChangesAsync();
+        return campaign;
+
+        //large chance I am wasting my time with this but just in case it has been created.
+        //var newCampaign = new Campaign
+        //{
+        //    GameEdition = campaign.GameEdition,
+        //    CampaignName = campaign.CampaignName,
+        //    CampaignDescription = campaign.CampaignDescription,
+        //    DungeonMasterId = dungeonMaster.Id,
+        //    DungeonMaster = dungeonMaster,
+        //    Player = player,
+        //    PlayerId = player.Id,
+        //};
+        //dungeonMaster.Campaigns.Add(newCampaign);
+        //player.Campaigns.Add(newCampaign);
 
     }
 
-    public Task<Campaign> CreateCampaignAsync(int dungeonMasterId, int playerId)
+    public async Task RemoveCampaignFromPlayerAsync(int playerId, int campainId)
     {
-        throw new NotImplementedException();
+        var player = await ReadPlayerAsync(playerId);
+        var campain = player!.Campaigns.FirstOrDefault(c => c.Id == campainId);
+        var dungeonMaster = campain!.DungeonMaster;
+        player!.Campaigns.Remove(campain);
+        dungeonMaster!.Campaigns.Remove(campain);
+        await _db.SaveChangesAsync();
+        
+    }
+
+    public async Task RemoveCampaignFromDungeonMasterAsync(int dungeonMasterId, int campainId)
+    {
+        var dungeonMaster = await ReadDMAsync(dungeonMasterId);
+        var allCampains = await ReadAllCampaignsAsync();
+        var campain = await ReadCampaignAsync(campainId);
+
+        //removes all players from the campain before we remove the DM(because it cannot exist without 1 of them.) Need to triple check that this works. 
+        foreach (var c in allCampains)
+        {
+            if(c.Id == campainId)
+            {
+                var player = await ReadPlayerAsync(c.PlayerId);
+                player!.Campaigns.Remove(c);
+                dungeonMaster!.Campaigns.Remove(c);
+                await _db.SaveChangesAsync();
+            }                       
+        }
+
     }
 }
