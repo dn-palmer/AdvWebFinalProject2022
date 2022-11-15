@@ -248,7 +248,7 @@ public class DndDbRepository : IDnDRepository
         //removes all players from the campain before we remove the DM(because it cannot exist without 1 of them.) Need to triple check that this works. 
         foreach (var c in allCampains)
         {
-            if(c.Id == campainId)
+            if(c.CampaignName == campain.CampaignName )
             {
                 var player = await ReadPlayerAsync(c.PlayerId);
                 player!.Campaigns.Remove(c);

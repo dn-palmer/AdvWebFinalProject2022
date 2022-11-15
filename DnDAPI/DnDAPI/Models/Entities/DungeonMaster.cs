@@ -8,6 +8,8 @@ public class DungeonMaster
     public string LastName { get; set; } = String.Empty;
     public int YearsOfExperiance { get; set; } = 0;
     public string Email { get; set; } =String.Empty;
+
+    //Games of interest to the person.
     public bool? DungeonAndDragons1E { get; set; }
     public bool? AdvancedDnD1E { get; set; }
     public bool? AdvancedDnD2E { get; set; }

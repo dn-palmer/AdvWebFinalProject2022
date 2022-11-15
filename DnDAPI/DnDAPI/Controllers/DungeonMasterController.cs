@@ -18,10 +18,10 @@ public class DungeonMasterController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> CreateDM( DungeonMaster dungeonMaster)
+    public async Task<IActionResult> CreateDM([FromForm] DungeonMaster dungeonMaster)
     {
         await _repos.CreateDungeonMasterAsync(dungeonMaster);
-        return Ok();
+        return CreatedAtAction("Get", new {id = dungeonMaster.Id}, dungeonMaster);
     }
 
 
@@ -47,7 +47,7 @@ public class DungeonMasterController : ControllerBase
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(DungeonMaster dungeonMaster)
+    public async Task<IActionResult> Update([FromForm] DungeonMaster dungeonMaster)
     {
         await _repos.UpdateGMAsync(dungeonMaster);
         return NoContent();

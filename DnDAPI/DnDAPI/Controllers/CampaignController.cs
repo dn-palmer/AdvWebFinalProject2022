@@ -33,37 +33,30 @@ public class CampaignController : Controller
 
 
     [HttpPost("Create")]
-    public async Task<IActionResult> CreateCampaign(int dungeonMasterId, int playerId, string campaignName, string campaignDesc, GameEdition gameEdition)
+    public async Task<IActionResult> CreateCampaign([FromForm]Campaign campaign)
     {
-        var dungeonMaster = await _repos.ReadDMAsync(dungeonMasterId);
+        
+        
+        
+        var dungeonMaster = await _repos.ReadDMAsync(campaign.DungeonMasterId);
         if(dungeonMaster == null)
         {
             return NotFound("Dungeon Master Id Invalid");
         }
-        
-        var player = await _repos.ReadPlayerAsync(playerId);
+
+        var player = await _repos.ReadPlayerAsync(campaign.PlayerId);
         if (dungeonMaster == null)
         {
             return NotFound("Player Id Invalid");
         }
-
-        var campaign = new Campaign
-        {
-            CampaignName = campaignName,
-            CampaignDescription = campaignDesc,
-            GameEdition = gameEdition,
-            Player = player,
-            DungeonMaster = dungeonMaster
-        };
-
         await _repos.CreateCampaignAsync(campaign);
 
-        return Ok();
+        return CreatedAtAction("Get", new { id = campaign.Id }, campaign); 
     }
 
    
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(Campaign campaign)
+    public async Task<IActionResult> Update([FromForm]Campaign campaign)
     {
         await _repos.UpdateCampaignAsync(campaign);
         return NoContent();

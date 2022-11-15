@@ -18,17 +18,17 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> CreatePlayer(Player player)
+    public async Task<IActionResult> CreatePlayer([FromForm] Player player)
     {
-        await _repos.CreatePlayerAsync(player);
-        return Ok();
+       await _repos.CreatePlayerAsync(player);
+       return CreatedAtAction("Get", new { id = player.Id }, player);
     }
 
 
     [HttpGet("ReadAll")]
     public async Task<IActionResult> ReadAll()
     {
-        var playerList = await _repos.ReadAllDMAsync();
+        var playerList = await _repos.ReadAllPlayersAsync();
         return Ok(playerList);
     }
 
@@ -41,7 +41,7 @@ public class PlayerController : ControllerBase
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(Player palyer)
+    public async Task<IActionResult> Update([FromForm] Player palyer)
     {
         await _repos.UpdatePlayerAsync(palyer);
         return NoContent();
