@@ -1,4 +1,4 @@
-namespace FinalProjectAPI.Models
+namespace DnDShopWebsite.Models
 {
     public class ErrorViewModel
     {

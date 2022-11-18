@@ -1,8 +1,8 @@
-﻿using FinalProjectAPI.Models;
+﻿using DnDShopWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace FinalProjectAPI.Controllers
+namespace DnDShopWebsite.Controllers
 {
     public class HomeController : Controller
     {
