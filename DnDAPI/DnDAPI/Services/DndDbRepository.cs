@@ -144,12 +144,6 @@ public class DndDbRepository : IDnDRepository
     //**    Game Preference CRUD Opps happen beyond this point.      **
     //*****************************************************************
 
-    public async Task<Campaign> CreatePreferencesAsync(Campaign campaign)
-    {
-        _db.Campaigns.Add(campaign);
-        await _db.SaveChangesAsync();
-        return campaign;
-    }
     public async Task<Campaign?> ReadCampaignAsync(int id)
     {
         return await _db.Campaigns

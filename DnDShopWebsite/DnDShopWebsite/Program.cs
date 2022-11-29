@@ -1,7 +1,11 @@
+using DnDShopWebsite.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<HttpClient>();
+builder.Services.AddScoped<IDnDRepository, DnDDbRepository>();
 
 var app = builder.Build();
 

@@ -63,14 +63,14 @@ public class CampaignController : Controller
     }
 
 
-    [HttpDelete("DeletePlayer/{id}")]
+    [HttpDelete("DeletePlayer/{playerid}/{campainId}")]
     public async Task<IActionResult> DeletePlayer(int playerId, int campainId)
     {
         await _repos.RemoveCampaignFromPlayerAsync(playerId, campainId);
         return NoContent();
     }
 
-    [HttpDelete("DeleteCampagin/{id}")]
+    [HttpDelete("DeleteCampagin/{dungeonMasterid}/{campainId}")]
     public async Task<IActionResult> DeleteCampagin(int dungeonMasterId, int campainId)
     {
         await _repos.RemoveCampaignFromPlayerAsync(dungeonMasterId, campainId);
