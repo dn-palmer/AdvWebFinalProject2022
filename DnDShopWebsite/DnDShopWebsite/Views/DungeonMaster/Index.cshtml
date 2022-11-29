@@ -1,0 +1,86 @@
+﻿@model IEnumerable<DnDShopWebsite.Models.Entities.DungeonMaster>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Dungeon Master List</h1>
+<br>
+<br>
+
+    <a asp-action="Create" class="btn btn-light">Register A New Dungeon Master</a>
+
+<br>
+<br>
+<br>
+@foreach (var item in Model)
+{
+    string fullName = $"{item.FirstName} {item.LastName}";
+
+    <div class="card bg-secondary text-light">
+        <div class="card-header">
+            <h4>@fullName</h4>
+            <p class="card-text">A Dungeon Master with @item.YearsOfExperiance year(s) of experiance running campaigns.</p>
+        </div>
+        <div class="card-body row text-center ">
+            <div class="col">
+                <p>Number of Ongoing Campaigns:</p>
+                <br>
+                <br>
+                <h1>@item.Campaigns.Count</h1>
+
+            </div>
+
+            <div class="col">
+                <p>Dungeon and Dragons editions they will run a game in:</p>
+                <br>
+                <ul class="list-group border-dark">
+                    @if (item.DungeonAndDragons1E == true)
+                    {
+                        <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 1st Edition</li>
+                    }
+                    @if (item.AdvancedDnD1E == true)
+                    {
+                        <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 1st Edition</li>
+                    }
+                    @if (item.AdvancedDnD2E == true)
+                    {
+                        <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 2nd Edition</li>
+                    }
+                    @if (item.DungeonAndDragons3E == true)
+                    {
+                        <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 3rd Edition</li>
+                    }
+                    @if (item.DungeonAndDragons4E == true)
+                    {
+                        <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 4th Edition</li>
+                    }
+                    @if (item.DungeonAndDragons5E == true)
+                    {
+                        <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 5th Edition</li>
+                    }
+                </ul>
+
+            </div>
+
+            <div class="col">
+
+                <p>Make Changes to this Dungeon Master:</p>
+                <br>
+                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@item.Id" class="btn btn-success" style="margin-right:.2em;">Details</a>
+
+                <a href="#" class="btn btn-primary" style="margin-right:.2em;">Edit</a>
+
+            <a href="#" class="btn btn-danger" style="margin-right:.2em;">Delete</a>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <br />
+
+
+}

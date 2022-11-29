@@ -1,0 +1,87 @@
+﻿@model DnDShopWebsite.Models.Entities.DungeonMaster
+
+@{
+    ViewData["Title"] = "Details";
+    string fullName = $"{Model.FirstName} {Model.LastName}";
+    //gathers distinct campagin names
+    var distinctCampagins = Model.Campaigns.Select(a => a.CampaignName).Distinct();
+
+
+}
+
+<h1>@fullName</h1>
+<br />
+
+<div class="row">
+ 
+    
+        <div class="col" >
+            <p>Number of Ongoing Campaigns:</p>
+            <br>
+
+            <h1>@Model.Campaigns.Count</h1>
+
+        </div>
+
+        <div class="col">
+            <p>Dungeon and Dragons editions they will run a game in:</p>
+            <br>
+            <ul class="list-group border-dark">
+                @if (Model.DungeonAndDragons1E == true)
+                {
+                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 1st Edition</li>
+                }
+                @if (Model.AdvancedDnD1E == true)
+                {
+                    <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 1st Edition</li>
+                }
+                @if (Model.AdvancedDnD2E == true)
+                {
+                    <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 2nd Edition</li>
+                }
+                @if (Model.DungeonAndDragons3E == true)
+                {
+                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 3rd Edition</li>
+                }
+                @if (Model.DungeonAndDragons4E == true)
+                {
+                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 4th Edition</li>
+                }
+                @if (Model.DungeonAndDragons5E == true)
+                {
+                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 5th Edition</li>
+                }
+            </ul>
+
+        </div>
+
+
+
+    </div>
+
+<h3>Campaign List</h3>
+<div>
+
+    @foreach(var item in distinctCampagins)
+    {
+              
+
+        <div class="card" style="width: 18rem; float: left;">
+            <div class="card-body">
+                <h5 class="card-title">@item</h5>
+                Players:
+                @foreach(var campaign in Model.Campaigns)
+                {
+                    <p>@campaign.Player.FirstName @campaign.Player.LastName</p>
+                }
+                @*      <p class="card-text">@item.CampaignDescription*@
+                
+            </div>
+        </div>
+    }
+
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
