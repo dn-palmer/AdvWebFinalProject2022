@@ -1,0 +1,65 @@
+﻿@using DnDShopWebsite.Models.Entities;
+@model DnDShopWebsite.Models.ViewModels.DeleteCampaignVM
+
+@{
+    ViewData["Title"] = "DeleteCampaign";
+}
+
+<h1>Deleting @Model.Campaign.CampaignName </h1>
+
+<h3>Are you sure you want to do this?</h3>
+<div class="row">
+    <div>
+        <form asp-action="DeleteCampaignPost">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="input-group col" style="width:25em;float:left; margin-right: 10em;">
+                <span asp-for="CampaignName" class="input-group-text bg-secondary text-light" id="inputGroup-sizing-default">Campaign Name</span>
+                <input type="text" class="form-control bg-secondary text-light" name="campaignName" value="@Model.Campaign.CampaignName" readonly aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"></label>
+                @Html.DropDownList("GameEdition",
+                Enum.GetValues(typeof(GameEdition)).Cast<GameEdition>().Select(x => new SelectListItem {Text = x.Description(), Value = Model.Campaign.GameEdition.ToString()}))
+ 
+            </div>
+            <br />
+            <br />
+            <div class="input-group">
+                <span asp-for="CampaignDescription" class="input-group-text bg-secondary text-light" id="inputGroup-sizing-default">Campain Description</span>
+                <input readonly type="text" class="form-control bg-secondary text-light" value="@Model.Campaign.CampaignDescription" name="campaignDescription" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <br />
+
+
+
+            <br />
+            <div class="row">
+
+                <div class="col">
+                    <label asp-for="@Model.AllPlayersInCampaign" class="control-label"> Current Players: </label>
+                    <ul class="list-group ">
+                        @foreach (var pl in Model.AllPlayersInCampaign)
+                        {
+                            <li class="list-group-item bg-secondary text-light">@pl.FirstName @pl.LastName</li>
+                        }
+
+                    </ul>
+
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input asp-for="DungeonMasterId" name="dungeonMasterId" class="form-control" value="@Model.DungeonMasterId" type="hidden" />
+            </div>
+
+            <div class="form-group">
+                <a asp-action="DeleteCampaignPost" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.DungeonMasterId" asp-route-campaignId="@Model.CampaignId" class="btn btn-danger">Delete Campaign</a>
+                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@Model.DungeonMasterId" class="btn btn-warning">Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+

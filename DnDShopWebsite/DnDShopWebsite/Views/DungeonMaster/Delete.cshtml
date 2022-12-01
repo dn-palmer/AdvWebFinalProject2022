@@ -1,0 +1,68 @@
+﻿@model DnDShopWebsite.Models.Entities.DungeonMaster
+
+@{
+    ViewData["Title"] = "Delete";
+    string fullName = $"{Model.FirstName} {Model.LastName}";
+    //gathers distinct campagin names
+    var distinctCampagins = Model.Campaigns.Select(a => a.CampaignName).Distinct();
+}
+
+<h1>Delete this Dungeon Masters profile?</h1>
+<br/>
+<h5>Please note: this will also delete all of their campagins.</h5>
+<hr />
+<div class="row">
+  
+
+    <div class="col">
+        <p>Number of Ongoing Campaigns:</p>
+        <br />
+
+        <h1 style="margin-left:25%;">@distinctCampagins.Count()</h1>
+
+        <br>
+        <p>Number of Players Partipating in Games:</p>
+        <br />
+
+        <h1 style="margin-left: 25%;">@Model.Campaigns.Count</h1>
+
+    </div>
+
+    <div class="col">
+        <p>Dungeon and Dragons editions they will run a game in:</p>
+        <br />
+        <ul class="list-group border-dark" style="text-align:center;">
+            @if (Model.DungeonAndDragons1E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 1st Edition</li>
+            }
+            @if (Model.AdvancedDnD1E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 1st Edition</li>
+            }
+            @if (Model.AdvancedDnD2E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 2nd Edition</li>
+            }
+            @if (Model.DungeonAndDragons3E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 3rd Edition</li>
+            }
+            @if (Model.DungeonAndDragons4E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 4th Edition</li>
+            }
+            @if (Model.DungeonAndDragons5E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 5th Edition</li>
+            }
+        </ul>
+
+    </div>
+    <hr />
+    <br />
+
+    <a type="submit" asp-action="DeleteDM" class="btn btn-danger" asp-route-id="@Model.Id" style="margin-right: 2em; height:3em; width: 25em;">Delete </a>
+    <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@Model.Id" class="btn btn-warning" style="margin-right: 2em; height:3em; width: 25em;">Go Back</a>
+
+</div>

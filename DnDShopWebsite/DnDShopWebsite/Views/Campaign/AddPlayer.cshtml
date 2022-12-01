@@ -1,0 +1,84 @@
+﻿@using DnDShopWebsite.Models.Entities;
+@model DnDShopWebsite.Models.ViewModels.AddAPlayerToCampaginVM
+
+@{
+    ViewData["Title"] = "AddPlayer";
+}
+
+<h1>Add a Player to @Model.CampaignName</h1>
+
+<h4>This game will be run by @Model.DungeonMaster.FirstName</h4>
+<hr />
+<div class="row">
+    <div>
+        <form asp-action="AddPlayer">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="input-group col" style="width:25em;float:left; margin-right: 10em;">
+                <span asp-for="CampaignName" class="input-group-text bg-secondary text-light" id="inputGroup-sizing-default">Campaign Name</span>
+                <input asp-for="CampaignName" type="text" class="form-control bg-secondary text-light" name="campaignName" readonly aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GameEdition" class="control-label"></label>
+                @Html.DropDownList("GameEdition",
+                Enum.GetValues(typeof(GameEdition)).Cast<GameEdition>().Select(x => new SelectListItem {Text = x.Description(), Value = Model.GameEdition.ToString()}))
+                <span asp-validation-for="GameEdition" class="text-danger"></span>
+            </div>
+            <br />
+            <br />
+            <div class="input-group">
+                <span asp-for="CampaignDescription" class="input-group-text bg-secondary text-light" id="inputGroup-sizing-default">Campain Description</span>
+                <input readonly asp-for="CampaignDescription" type="text" class="form-control bg-secondary text-light" value="@Model.CampaignDescription" name="campaignDescription" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <br />
+
+
+
+            <br />
+            <div class="row">
+
+                <div class="col">
+                    <label asp-for="CurrentPlayers" class="control-label"> Current Players: </label>
+                    <ul class="list-group ">
+                        @foreach (var pl in Model.CurrentPlayers)
+                        {
+                            <li class="list-group-item bg-secondary text-light">@pl.FirstName @pl.LastName</li>
+                        }
+
+                    </ul>
+
+                </div>
+
+                <div class="col">
+                    <label asp-for="PlayerId" class="control-label"> Possible New Player List (Please Select One): </label>
+                    @foreach (var p in Model.NonPlayers)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="@p.Id" name="playerId" value="@p.Id" />
+                            <label class="form-check-label" asp-for="PlayerId">@p.FirstName @p.LastName</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input asp-for="DungeonMasterID" name="dungeonMasterId" class="form-control" value="@Model.DungeonMasterID" type="hidden" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Add Player" class="btn btn-primary" />
+                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@Model.DungeonMasterID" class="btn btn-warning">Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

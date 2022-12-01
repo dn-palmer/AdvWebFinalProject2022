@@ -1,0 +1,15 @@
+﻿@model DnDShopWebsite.Models.ViewModels.RemovePlayerVM
+
+@{
+    ViewData["Title"] = "DeletePlayer";
+}
+
+
+<h1>Remove Player from @Model.CampaignName</h1>
+<hr class="text-light" />
+<h3>Are you sure you want to remove @Model.PlayerFullName from the campaign?</h3>
+
+
+<a asp-action="DeletePlayerPost" asp-controller="Campaign" asp-route-playerId="@Model.PlayerId" asp-route-campaignId="@Model.CampaignId" class="btn btn-danger" style="margin-right:.2em;">Remove</a>
+<a asp-action="Index">Back to List</a>
+

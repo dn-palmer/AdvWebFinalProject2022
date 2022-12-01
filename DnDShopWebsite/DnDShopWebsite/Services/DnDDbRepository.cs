@@ -96,6 +96,7 @@ public class DnDDbRepository : IDnDRepository
             ["Id"] = $"{dungeonMaster.Id}",
             ["FirstName"] = $"{dungeonMaster.FirstName}",
             ["LastName"] = $"{dungeonMaster.LastName}",
+            ["Email"] = $"{dungeonMaster.Email}",
             ["YearsOfExperiance"] = $"{dungeonMaster.YearsOfExperiance}",
             ["DungeonAndDragons1E"] = $"{dungeonMaster.DungeonAndDragons1E}",
             ["AdvancedDnD1E"] = $"{dungeonMaster.AdvancedDnD1E}",
@@ -175,7 +176,7 @@ public class DnDDbRepository : IDnDRepository
     {
         Player? player = null;
 
-        var response = await _client.GetAsync("Player/ReadAll");
+        var response = await _client.GetAsync($"Player/Read/{id}");
 
         if (response.IsSuccessStatusCode)
         {
@@ -227,7 +228,7 @@ public class DnDDbRepository : IDnDRepository
     {
         Campaign? campaign = null;
 
-        var response = await _client.GetAsync("Campaign/ReadAll");
+        var response = await _client.GetAsync($"Campaign/Read/{id}");
 
         if (response.IsSuccessStatusCode)
         {
@@ -272,7 +273,8 @@ public class DnDDbRepository : IDnDRepository
             ["PlayerId"] = $"{campaign.PlayerId}",
             ["DungeonMasterId"] = $"{campaign.DungeonMasterId}",
             ["GameEdition"] = $"{campaign.GameEdition}",
-            ["CampaignDescription"] = $"{campaign.CampaignDescription}"
+            ["CampaignDescription"] = $"{campaign.CampaignDescription}",
+            ["CampaignName"] = $"{campaign.CampaignName}"
 
         });
 
@@ -287,7 +289,8 @@ public class DnDDbRepository : IDnDRepository
             ["PlayerId"] = $"{campaign.PlayerId}",
             ["DungeonMasterId"] = $"{campaign.DungeonMasterId}",
             ["GameEdition"] = $"{campaign.GameEdition}",
-            ["CampaignDescription"] = $"{campaign.CampaignDescription}"
+            ["CampaignDescription"] = $"{campaign.CampaignDescription}",
+            ["CampaignName"] = $"{campaign.CampaignName}"
 
         });
 

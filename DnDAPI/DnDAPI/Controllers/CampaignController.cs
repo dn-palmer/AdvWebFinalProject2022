@@ -19,27 +19,27 @@ public class CampaignController : Controller
     [HttpGet("ReadAll")]
     public async Task<IActionResult> ReadAll()
     {
-        var playerList = await _repos.ReadAllDMAsync();
-        return Ok(playerList);
+        var campaignList = await _repos.ReadAllCampaignsAsync();
+        return Ok(campaignList);
     }
 
     [HttpGet("Read/{id}")]
     public async Task<IActionResult> Read(int id)
     {
-        var player = await _repos.ReadPlayerAsync(id);
-        return Ok(player);
+        var campaign = await _repos.ReadCampaignAsync(id);
+        return Ok(campaign);
 
     }
 
 
     [HttpPost("Create")]
-    public async Task<IActionResult> CreateCampaign([FromForm]Campaign campaign)
+    public async Task<IActionResult> CreateCampaign([FromForm] Campaign campaign)
     {
-        
-        
-        
+
+
+
         var dungeonMaster = await _repos.ReadDMAsync(campaign.DungeonMasterId);
-        if(dungeonMaster == null)
+        if (dungeonMaster == null)
         {
             return NotFound("Dungeon Master Id Invalid");
         }
@@ -51,10 +51,43 @@ public class CampaignController : Controller
         }
         await _repos.CreateCampaignAsync(campaign);
 
-        return CreatedAtAction("Get", new { id = campaign.Id }, campaign); 
+        return CreatedAtAction("Get", new { id = campaign.Id }, campaign);
     }
 
-   
+
+    //public async Task<IActionResult> CreateCampaign([FromForm] int gameEdition, [FromForm] string campaignName, [FromForm] string campaignDescription, [FromForm]  int dungeonMasterId, [FromForm] int playerId)
+    //{
+
+
+
+    //    var dungeonMaster = await _repos.ReadDMAsync(dungeonMasterId);
+    //    if (dungeonMaster == null)
+    //    {
+    //        return NotFound("Dungeon Master Id Invalid");
+    //    }
+
+    //    var player = await _repos.ReadPlayerAsync(playerId);
+    //    if (dungeonMaster == null)
+    //    {
+    //        return NotFound("Player Id Invalid");
+    //    }
+
+    //    var campaign = new Campaign
+    //    {
+    //        CampaignDescription = campaignDescription,
+    //        CampaignName = campaignName,
+    //        GameEdition = (GameEdition)gameEdition,
+    //        DungeonMasterId = dungeonMasterId,
+    //        PlayerId = playerId
+    //    };
+
+
+    //    await _repos.CreateCampaignAsync(campaign);
+
+    //    return CreatedAtAction("Get", new { id = campaign.Id }, campaign);
+    //}
+
+
     [HttpPut("Update")]
     public async Task<IActionResult> Update([FromForm]Campaign campaign)
     {
@@ -73,7 +106,7 @@ public class CampaignController : Controller
     [HttpDelete("DeleteCampagin/{dungeonMasterid}/{campainId}")]
     public async Task<IActionResult> DeleteCampagin(int dungeonMasterId, int campainId)
     {
-        await _repos.RemoveCampaignFromPlayerAsync(dungeonMasterId, campainId);
+        await _repos.RemoveCampaignFromDungeonMasterAsync(dungeonMasterId, campainId);
         return NoContent();
     }
 

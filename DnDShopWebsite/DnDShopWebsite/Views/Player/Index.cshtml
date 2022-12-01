@@ -1,16 +1,14 @@
-﻿@model IEnumerable<DnDShopWebsite.Models.Entities.DungeonMaster>
+﻿@model IEnumerable<DnDShopWebsite.Models.Entities.Player>
 
 @{
     ViewData["Title"] = "Index";
-
-   
 }
 
-<h1>Dungeon Master List</h1>
+<h1>Player List</h1>
 <br>
 <br>
 
-    <a asp-action="Create" asp-controller="DungeonMaster" class="btn btn-light">Register A New Dungeon Master</a>
+<a asp-action="Create" asp-controller="Player" class="btn btn-light">Register A New Player</a>
 
 <br>
 <br>
@@ -22,20 +20,22 @@
     <div class="card bg-secondary text-light">
         <div class="card-header">
             <h4>@fullName</h4>
-            <p class="card-text">A Dungeon Master with @item.YearsOfExperiance year(s) of experiance running campaigns.</p>
+            <p class="card-text">A Player with @item.YearsOfExperiance year(s) of experiance playing in campaigns.</p>
         </div>
         <div class="card-body row text-center ">
             <div class="col">
                 <p>Number of Ongoing Campaigns:</p>
                 <br>
                 <br>
-                @{var distinctCampagins = item.Campaigns.Select(a => a.CampaignName).Distinct();}
+                @{
+                    var distinctCampagins = item.Campaigns.Select(a => a.CampaignName).Distinct();
+                }
                 <h1>@distinctCampagins.Count()</h1>
 
             </div>
 
             <div class="col">
-                <p>Dungeon and Dragons editions they will run a game in:</p>
+                <p>Dungeon and Dragons editions they enjoy playing:</p>
                 <br>
                 <ul class="list-group border-dark">
                     @if (item.DungeonAndDragons1E == true)
@@ -68,13 +68,13 @@
 
             <div class="col">
 
-                <p>Make Changes to this Dungeon Master:</p>
+                <p>Make Changes to this Player:</p>
                 <br>
-                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@item.Id" class="btn btn-success" style="margin-right:.2em;">Details</a>
+                <a asp-action="Details" asp-controller="Player" asp-route-id="@item.Id" class="btn btn-success" style="margin-right:.2em;">Details</a>
 
-                <a asp-action="Edit" asp-controller="DungeonMaster" asp-route-id="@item.Id" class="btn btn-primary" style="margin-right:.2em;">Edit</a>
+                <a asp-action="Edit" asp-controller="Player" asp-route-id="@item.Id" class="btn btn-primary" style="margin-right:.2em;">Edit</a>
 
-                <a asp-action="Delete" asp-controller="DungeonMaster" asp-route-id="@item.Id" class="btn btn-danger" style="margin-right:.2em;">Delete</a>
+                <a asp-action="Delete" asp-controller="Player" asp-route-id="@item.Id" class="btn btn-danger" style="margin-right:.2em;">Delete</a>
 
 
             </div>

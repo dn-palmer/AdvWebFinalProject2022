@@ -6,9 +6,9 @@ namespace DnDAPI.Models.Entities;
 public class Campaign
 {
     public int Id { get; set; }
-    public GameEdition GameEdition { get; set; }
-    public string CampaignName { get; set; } = String.Empty;  
-    public string CampaignDescription { get; set; } = String.Empty;    
+    public GameEdition? GameEdition { get; set; }
+    public string? CampaignName { get; set; } = String.Empty;  
+    public string? CampaignDescription { get; set; } = String.Empty;    
     public int DungeonMasterId { get; set; }
     public DungeonMaster? DungeonMaster { get; set; }
     public int PlayerId { get; set; }

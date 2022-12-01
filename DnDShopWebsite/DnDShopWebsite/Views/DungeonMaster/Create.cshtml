@@ -1,0 +1,144 @@
+﻿@model DnDShopWebsite.Models.Entities.DungeonMaster
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>You are Creating a New A Dungeon Master.</h1>
+<hr />
+
+<div class="align-content-center">
+    <div class="row">
+
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h3>Personal Information</h3>
+            <br />
+
+            <div class="input-group col" style="width:25em;float:left; margin-right: 10em;">
+                <span asp-for="FirstName" class="input-group-text" id="inputGroup-sizing-default">First Name</span>
+                <input asp-for="FirstName" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+
+
+            <div class="input-group" style="width:25em;">
+                <span asp-for="LastName" class="input-group-text" id="inputGroup-sizing-default">Last Name</span>
+                <input asp-for="LastName" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <br />
+
+            <div class="input-group" style="width:25em;float:left;margin-right: 10em;">
+                <span asp-for="YearsOfExperiance" class="input-group-text" id="inputGroup-sizing-default">Years of Experiance</span>
+                <input asp-for="YearsOfExperiance" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+            <div class="input-group" style="width:25em;">
+                <span asp-for="Email" class="input-group-text" id="inputGroup-sizing-default">Email</span>
+                <input asp-for="Email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+
+            </div>
+            <br />
+            <br />
+            <h3>Game systems you are willing to run:</h3>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Dungeon And Dragons 1E</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd1eTrueRdo" name="DungeonAndDragons1E" value="True"  />
+                        <label class="form-check-label" for="DungeonAndDragons1E">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd1eFalseRdo" name="DungeonAndDragons1E" value="False" checked />
+                        <label class="form-check-label" for="DungeonAndDragons1E">False</label>
+                    </div>
+
+                </div>
+
+                <div class="col">
+                    <label class="form-label">Advanced DnD 1E</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="ADnd1eTrueRdo" name="AdvancedDnD1E" value="True"  />
+                        <label class="form-check-label" for="AdvancedDnD1E">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="ADnd1eFalseRdo" name="AdvancedDnD1E" value="False" checked />
+                        <label class="form-check-label" for="AdvancedDnD1E">False</label>
+                    </div>
+
+                </div>
+
+                <div class="col">
+                    <label class="form-label">Advanced DnD 2E</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="ADnd2eTrueRdo" name="AdvancedDnD2E" value="True"  />
+                        <label class="form-check-label" for="AdvancedDnD2E">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="ADnd2eFalseRdo" name="AdvancedDnD2E" value="False" checked />
+                        <label class="form-check-label" for="AdvancedDnD2E">False</label>
+                    </div>
+
+                </div>
+
+
+                <div class="col">
+                    <label class="form-label">Dungeon And Dragons 3E</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd3eTrueRdo" name="DungeonAndDragons3E" value="True"  />
+                        <label class="form-check-label" for="DungeonAndDragons3E">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd3eFalseRdo" name="DungeonAndDragons3E" value="False" checked />
+                        <label class="form-check-label" for="DungeonAndDragons3E">False</label>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <label class="form-label">Dungeon And Dragon 4E</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd4eTrueRdo" name="DungeonAndDragons4E" value="True"  />
+                        <label class="form-check-label" for="DungeonAndDragons4E">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd4eFalseRdo" name="DungeonAndDragons4E" value="False" checked />
+                        <label class="form-check-label" for="DungeonAndDragons4E">False</label>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <label class="form-label">DungeonAndDragons5E</label>
+
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd5eTrueRdo" name="DungeonAndDragons5E" value="True"  />
+                        <label class="form-check-label" for="DungeonAndDragons5E">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="Dnd5eFalseRdo" name="DungeonAndDragons5E" value="False" checked />
+                        <label class="form-check-label" for="DungeonAndDragons5E">False</label>
+                    </div>
+
+                </div>
+            </div>
+
+            <br />
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" style="margin-right: 2em;" />
+                <a asp-action="Index" asp-controller="DungeonMaster" class="btn btn-warning">Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

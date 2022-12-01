@@ -5,83 +5,135 @@
     string fullName = $"{Model.FirstName} {Model.LastName}";
     //gathers distinct campagin names
     var distinctCampagins = Model.Campaigns.Select(a => a.CampaignName).Distinct();
-
-
 }
 
-<h1>@fullName</h1>
 <br />
+<h1>@fullName</h1>
+<hr class="text-light" />
+
 
 <div class="row">
- 
-    
-        <div class="col" >
-            <p>Number of Ongoing Campaigns:</p>
-            <br>
-
-            <h1>@Model.Campaigns.Count</h1>
-
-        </div>
-
-        <div class="col">
-            <p>Dungeon and Dragons editions they will run a game in:</p>
-            <br>
-            <ul class="list-group border-dark">
-                @if (Model.DungeonAndDragons1E == true)
-                {
-                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 1st Edition</li>
-                }
-                @if (Model.AdvancedDnD1E == true)
-                {
-                    <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 1st Edition</li>
-                }
-                @if (Model.AdvancedDnD2E == true)
-                {
-                    <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 2nd Edition</li>
-                }
-                @if (Model.DungeonAndDragons3E == true)
-                {
-                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 3rd Edition</li>
-                }
-                @if (Model.DungeonAndDragons4E == true)
-                {
-                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 4th Edition</li>
-                }
-                @if (Model.DungeonAndDragons5E == true)
-                {
-                    <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 5th Edition</li>
-                }
-            </ul>
-
-        </div>
 
 
+    <div class="col">
+        <p>Number of Ongoing Campaigns:</p>
+        <br />
+
+        <h1 style="margin-left:25%;">@distinctCampagins.Count()</h1>
+
+        <br>
+        <p>Number of Players Partipating in Games:</p>
+        <br />
+
+        <h1 style="margin-left: 25%;">@Model.Campaigns.Count</h1>
 
     </div>
 
+    <div class="col">
+        <p>Dungeon and Dragons editions they will run a game in:</p>
+        <br />
+        <ul class="list-group border-dark" style="text-align:center;">
+            @if (Model.DungeonAndDragons1E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 1st Edition</li>
+            }
+            @if (Model.AdvancedDnD1E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 1st Edition</li>
+            }
+            @if (Model.AdvancedDnD2E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Advanced Dungeons &amp; Dragons 2nd Edition</li>
+            }
+            @if (Model.DungeonAndDragons3E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 3rd Edition</li>
+            }
+            @if (Model.DungeonAndDragons4E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 4th Edition</li>
+            }
+            @if (Model.DungeonAndDragons5E == true)
+            {
+                <li class="list-group-item bg-secondary text-light border-dark">Dungeons &amp; Dragons 5th Edition</li>
+            }
+        </ul>
+
+    </div>
+
+
+
+</div>
+
+<br />
+<br />
+<div class="row">
+    <div class="col">
+        <a asp-action="Create" asp-controller="Campaign" asp-route-id="@Model.Id" class="btn btn-success" style="width:12em;margin-left:25%; margin-right: .5em;height:4em;">Create a <br /> Campaign</a>
+        <a asp-action="Edit" asp-controller="DungeonMaster" asp-route-id="@Model.Id" class="btn btn-primary text-md-center" style="width:12em; margin-right: .5em;height:4em;">Edit Dungeon<br /> Master</a>
+        <a asp-action="Delete" asp-controller="DungeonMaster" asp-route-id="@Model.Id" class="btn btn-danger" style="width:12em; margin-right: .5em;height:4em;">Delete Dungeon Master</a>
+    </div>
+</div>
+
+<br />
+<br />
+
 <h3>Campaign List</h3>
-<div>
+<hr class="text-light" />
+<br />
 
-    @foreach(var item in distinctCampagins)
+<div class="row">
+
+    @foreach (var item in distinctCampagins)
     {
-              
 
-        <div class="card" style="width: 18rem; float: left;">
+
+        <div class="card bg-dark text-light border-light" style="width: 30em; float: left; margin-left: 5em; margin-bottom: 1em;">
             <div class="card-body">
-                <h5 class="card-title">@item</h5>
-                Players:
-                @foreach(var campaign in Model.Campaigns)
-                {
-                    <p>@campaign.Player.FirstName @campaign.Player.LastName</p>
+                @{
+                    var campaignDes = Model.Campaigns.FirstOrDefault(x => x.CampaignName == item).CampaignDescription;
+                    var campaignId = Model.Campaigns.FirstOrDefault(x => x.CampaignName == item).Id;
+                    var gameEdition = Model.Campaigns.FirstOrDefault(x => x.CampaignName == item).GameEdition;
                 }
-                @*      <p class="card-text">@item.CampaignDescription*@
-                
+
+                <div class="row">
+                    <h5 class="card-title">@item</h5>
+                </div>
+                <br />
+                <p>Game Edition: <br> @gameEdition.ToString()</p>
+         
+                <p>Campaign Description: <br> @campaignDes</p>
+                <br />
+                Players:
+                <div class="row">
+                    @foreach (var campaign in Model.Campaigns)
+                    {
+                        if (item == campaign.CampaignName)
+                        {
+                            <div class="row" style="margin-bottom: .5em;">
+                                <div class="col">
+                                    <p>@campaign.Player.FirstName @campaign.Player.LastName</p>
+                                </div>
+
+                                <div class="col">
+                                    <a asp-action="Details" asp-controller="Player" asp-route-id="@campaign.PlayerId" class="btn btn-success" style="margin-right:.2em;">Details</a>
+                                    <a asp-action="DeletePlayer" asp-controller="Campaign" asp-route-playerId="@campaign.PlayerId" asp-route-campaignId="@campaign.Id" class="btn btn-danger" style="margin-right:.2em;">Remove</a>
+
+                                </div>
+                            </div>
+                        }
+                      
+                    }
+                   
+                </div>
+                <br/>
+                <a asp-action="AddPlayer" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.Id" asp-route-campaignId="@campaignId" class="btn btn-primary" style="margin-right:.2em;">Add Player</a>
+                <a asp-action="DeleteCampaign" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.Id" asp-route-campaignId="@campaignId" class="btn btn-danger" style="margin-right:.2em;">Delete Campaign</a>
             </div>
         </div>
     }
+</div>
+<a asp-action="Index" asp-controller="DungeonMaster"  class="btn btn-warning">Go Back</a>
 
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
