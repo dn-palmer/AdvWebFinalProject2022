@@ -16,9 +16,28 @@ namespace DnDShopWebsite.Controllers
         }
         public async Task<IActionResult> Index()
         {
+           
             var campaigns = await _repo.ReadAllCampaignsAsync();
 
-            return View(campaigns);
+            var players = await _repo.ReadAllPlayersAsync();
+
+            var dungeonMasters = await _repo.ReadAllDMAsync();
+
+            var distinctCampaignNames = campaigns.Select(a => a.CampaignName).Distinct().ToList();
+
+
+            var model = new CampaignIndexVM
+            {
+                DungeonMasters = dungeonMasters,
+                Players = players,
+                UniqeCampaignNames = distinctCampaignNames,
+                AllCampaigns = campaigns,
+
+            };
+
+
+
+            return View(model);
         }
 
         public async Task<IActionResult> Create(int id)
