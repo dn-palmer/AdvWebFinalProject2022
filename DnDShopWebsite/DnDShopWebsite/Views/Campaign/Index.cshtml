@@ -1,29 +1,62 @@
-﻿@model IEnumerable<DnDShopWebsite.Models.ViewModels.CampaignIndexVM>
+﻿@model DnDShopWebsite.Models.ViewModels.CampaignIndexVM
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h3>Campaign List</h3>
+<hr class="text-light" />
+<br />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+
+    @foreach (var item in Model.UniqeCampaignNames)
+    {
+
+
+        <div class="card bg-dark text-light border-light" style="width: 30em; float: left; margin-left: 5em; margin-bottom: 1em;">
+            <div class="card-body">
+                @{
+                    var campaignDes = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == item).CampaignDescription;
+                    var campaignId = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == item).Id;
+                    var gameEdition = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == item).GameEdition;
+                }
+
+                <div class="row">
+                    <h5 class="card-title">@item</h5>
+                </div>
+                <br />
+                <p>Game Edition: <br> @gameEdition.ToString()</p>
+
+                <p>Campaign Description: <br> @campaignDes</p>
+                <br />
+                Players:
+                <div class="row">
+                    @foreach (var campaign in Model.AllCampaigns)
+                    {
+                        if (item == campaign.CampaignName)
+                        {
+                            <div class="row" style="margin-bottom: .5em;">
+                                <div class="col">
+                                    <p>@campaign.Player.FirstName @campaign.Player.LastName</p>
+                                </div>
+
+                                <div class="col">
+                                    <a asp-action="Details" asp-controller="Player" asp-route-id="@campaign.PlayerId" class="btn btn-success" style="margin-right:.2em;">Details</a>
+                                    <a asp-action="DeletePlayer" asp-controller="Campaign" asp-route-playerId="@campaign.PlayerId" asp-route-campaignId="@campaign.Id" class="btn btn-danger" style="margin-right:.2em;">Remove</a>
+
+                                </div>
+                            </div>
+                        }
+
+                    }
+
+                </div>
+                <br />
+                <a asp-action="AddPlayer" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.Id" asp-route-campaignId="@campaignId" class="btn btn-primary" style="margin-right:.2em;">Add Player</a>
+                <a asp-action="DeleteCampaign" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.Id" asp-route-campaignId="@campaignId" class="btn btn-danger" style="margin-right:.2em;">Delete Campaign</a>
+            </div>
+        </div>
+    }
+</div>
+<a asp-action="Index" asp-controller="DungeonMaster" class="btn btn-warning">Go Back</a>
