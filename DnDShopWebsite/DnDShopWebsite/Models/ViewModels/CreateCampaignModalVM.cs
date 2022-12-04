@@ -2,10 +2,9 @@
 
 namespace DnDShopWebsite.Models.ViewModels;
 
-public class CreateACampaignVM
+public class CreateCampaignModalVM
 {
-    public int DungeonMasterID { get; set; }
-    public DungeonMaster DungeonMaster { get; set; }
+    public ICollection<DungeonMaster> DungeonMasters { get; set; } = new List<DungeonMaster>();
     public ICollection<Player> Players { get; set; } = new List<Player>();
     public GameEdition GameEdition { get; set; }
     public string? CampaignName { get; set; } = String.Empty;

@@ -2,61 +2,25 @@
 
 @{
     ViewData["Title"] = "Index";
+
 }
 
-<h3>Campaign List</h3>
-<hr class="text-light" />
-<br />
+<h1>Campaign List</h1>
+
+<br>
+<br>
+<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createCampaignModal">Register A New Campaign</button>
+<partial name="_CreateCampaignModal" model="@Model.CampaignCreationModal" />
+<br>
+<br>
+<br>
 
 <div class="row">
 
-    @foreach (var item in Model.UniqeCampaignNames)
-    {
-
-
-        <div class="card bg-dark text-light border-light" style="width: 30em; float: left; margin-left: 5em; margin-bottom: 1em;">
-            <div class="card-body">
-                @{
-                    var campaignDes = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == item).CampaignDescription;
-                    var campaignId = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == item).Id;
-                    var gameEdition = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == item).GameEdition;
-                }
-
-                <div class="row">
-                    <h5 class="card-title">@item</h5>
-                </div>
-                <br />
-                <p>Game Edition: <br> @gameEdition.ToString()</p>
-
-                <p>Campaign Description: <br> @campaignDes</p>
-                <br />
-                Players:
-                <div class="row">
-                    @foreach (var campaign in Model.AllCampaigns)
-                    {
-                        if (item == campaign.CampaignName)
-                        {
-                            <div class="row" style="margin-bottom: .5em;">
-                                <div class="col">
-                                    <p>@campaign.Player.FirstName @campaign.Player.LastName</p>
-                                </div>
-
-                                <div class="col">
-                                    <a asp-action="Details" asp-controller="Player" asp-route-id="@campaign.PlayerId" class="btn btn-success" style="margin-right:.2em;">Details</a>
-                                    <a asp-action="DeletePlayer" asp-controller="Campaign" asp-route-playerId="@campaign.PlayerId" asp-route-campaignId="@campaign.Id" class="btn btn-danger" style="margin-right:.2em;">Remove</a>
-
-                                </div>
-                            </div>
-                        }
-
-                    }
-
-                </div>
-                <br />
-                <a asp-action="AddPlayer" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.Id" asp-route-campaignId="@campaignId" class="btn btn-primary" style="margin-right:.2em;">Add Player</a>
-                <a asp-action="DeleteCampaign" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.Id" asp-route-campaignId="@campaignId" class="btn btn-danger" style="margin-right:.2em;">Delete Campaign</a>
-            </div>
-        </div>
+    @foreach (var item in Model.UniqeCampaignNames)    {
+        Model.CampaignPartialVM.CurrentCampaignName = item;
+        <partial name="_CampaignCardsPartial" model="@Model.CampaignPartialVM" />        
     }
 </div>
-<a asp-action="Index" asp-controller="DungeonMaster" class="btn btn-warning">Go Back</a>
+
+<a asp-action="Index" asp-controller="Home" class="btn btn-warning">Go Back</a>

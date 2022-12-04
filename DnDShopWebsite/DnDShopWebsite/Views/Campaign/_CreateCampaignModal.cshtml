@@ -1,0 +1,78 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model DnDShopWebsite.Models.ViewModels.CreateCampaignModalVM
+
+
+<div class="modal fade" id="createCampaignModal" tabindex="-1"
+     role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div id="mainContent" class="modal-content">
+            <form id="createCampaignForm" asp-action="Create" asp-controller="Campaign">
+                <div class="modal-header">
+                    <h5>Create Campaign</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="input-group col" style="width:25em;float:left; margin-right: 10em;">
+                        <span asp-for="CampaignName" class="input-group-text" id="inputGroup-sizing-default">Campaign Name</span>
+                        <input asp-for="CampaignName" type="text" class="form-control" name="campaignName" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="GameEdition" class="control-label"></label>
+                        @Html.DropDownList("GameEdition",
+                        Enum.GetValues(typeof(GameEdition)).Cast<GameEdition>().Select(x => new SelectListItem {Text = x.Description(), Value = x.ToString()}))
+                        <span asp-validation-for="GameEdition" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="input-group">
+                        <span asp-for="CampaignDescription" class="input-group-text" id="inputGroup-sizing-default">Campain Description</span>
+                        <input asp-for="CampaignDescription" type="text" class="form-control" name="campaignDescription" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </div>
+
+
+                    <br />
+                    <div class="row">
+                        <label asp-for="Players" class="control-label"> Player List (Please Select One): </label>
+                        @foreach (var p in Model.Players)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="@p.Id" name="playerId" value="@p.Id" />
+                                <label class="form-check-label" asp-for="Players">@p.FirstName @p.LastName</label>
+                            </div>
+                        }
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <label asp-for="DungeonMasters" class="control-label"> Dungeon Master List (Please Select One): </label>
+                        @foreach (var d in Model.DungeonMasters)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="@d.Id" name="dungeonMasterId" value="@d.Id" />
+                                <label class="form-check-label" >@d.FirstName @d.LastName</label>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="reset" class="btn btn-secondary">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

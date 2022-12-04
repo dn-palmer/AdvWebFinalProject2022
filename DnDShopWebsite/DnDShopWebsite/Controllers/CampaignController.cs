@@ -25,6 +25,19 @@ namespace DnDShopWebsite.Controllers
 
             var distinctCampaignNames = campaigns.Select(a => a.CampaignName).Distinct().ToList();
 
+            var campaignPartial = new CampaignCardPartialVM
+            {
+                AllCampaigns = campaigns,
+                Players = players,
+                DungeonMasters = dungeonMasters,
+                CurrentCampaignName = ""
+            };
+
+            var campaignCreationModal = new CreateCampaignModalVM
+            {
+                DungeonMasters = dungeonMasters,
+                Players = players
+            };
 
             var model = new CampaignIndexVM
             {
@@ -32,6 +45,8 @@ namespace DnDShopWebsite.Controllers
                 Players = players,
                 UniqeCampaignNames = distinctCampaignNames,
                 AllCampaigns = campaigns,
+                CampaignCreationModal= campaignCreationModal,
+                CampaignPartialVM = campaignPartial                
 
             };
 
