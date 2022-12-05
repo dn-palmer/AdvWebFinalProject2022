@@ -161,7 +161,7 @@ public class DndDbRepository : IDnDRepository
     }
     public async Task UpdateCampaignAsync(Campaign campaign)
     {
-        var dungeonMaster = ReadDMAsync(campaign.DungeonMasterId);
+        var dungeonMaster = await ReadDMAsync(campaign.DungeonMasterId);
         //if player and dm are not found it terminates the method call.
         if (dungeonMaster == null)
         {
@@ -173,17 +173,21 @@ public class DndDbRepository : IDnDRepository
         {
             return;
         }
-
+      
         var campaignToUpdate = await ReadCampaignAsync(campaign.Id);
 
-        campaignToUpdate.GameEdition = campaign.GameEdition;
-        campaignToUpdate.CampaignName = campaign.CampaignName;
-        campaignToUpdate.CampaignDescription = campaign.CampaignDescription;
-        campaignToUpdate.DungeonMasterId = campaign.DungeonMasterId;
-        campaignToUpdate.DungeonMaster = campaign.DungeonMaster;
-        campaignToUpdate.Player = campaign.Player;
-        campaignToUpdate.PlayerId = campaign.PlayerId;
-        await _db.SaveChangesAsync();
+        if (campaignToUpdate != null)
+        {
+            //campaignToUpdate.Id = campaign.Id;
+            campaignToUpdate.GameEdition = campaign.GameEdition;
+            campaignToUpdate.CampaignName = campaign.CampaignName;
+            campaignToUpdate.CampaignDescription = campaign.CampaignDescription;
+            //campaignToUpdate.DungeonMasterId = campaign.DungeonMasterId;
+            //campaignToUpdate.DungeonMaster = campaign.DungeonMaster;
+            //campaignToUpdate.Player = campaign.Player;
+            //campaignToUpdate.PlayerId = campaign.PlayerId;
+            await _db.SaveChangesAsync();
+        }
     }
 
     public async Task<Campaign?> CreateCampaignAsync(Campaign campaign)

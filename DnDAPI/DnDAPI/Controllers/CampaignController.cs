@@ -49,9 +49,9 @@ public class CampaignController : Controller
         {
             return NotFound("Player Id Invalid");
         }
-        await _repos.CreateCampaignAsync(campaign);
+        var c = await _repos.CreateCampaignAsync(campaign);
 
-        return CreatedAtAction("Get", new { id = campaign.Id }, campaign);
+        return Ok(c);
     }
 
 

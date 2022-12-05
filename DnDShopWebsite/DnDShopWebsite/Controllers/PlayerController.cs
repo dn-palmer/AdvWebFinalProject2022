@@ -32,7 +32,7 @@ namespace DnDShopWebsite.Controllers
             if (ModelState.IsValid)
             {
                 var newPlayer = await _repo.CreatePlayerAsync(player);
-                return RedirectToAction("Details", "Player", new { Id = newPlayer.Id });
+                return RedirectToAction("Index", "Player");
             }
             return View(player);
         }

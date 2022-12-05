@@ -57,7 +57,8 @@
 
             <div class="form-group">
                 <a asp-action="DeleteCampaignPost" asp-controller="Campaign" asp-route-dungeonMasterId="@Model.DungeonMasterId" asp-route-campaignId="@Model.CampaignId" class="btn btn-danger">Delete Campaign</a>
-                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@Model.DungeonMasterId" class="btn btn-warning">Go Back</a>
+                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@Model.DungeonMasterId" class="btn btn-warning">Return Dungeon Master Details</a>
+                <a asp-action="Index" asp-controller="Campaign" class="btn btn-warning"> Return To Campaign List</a>
             </div>
         </form>
     </div>

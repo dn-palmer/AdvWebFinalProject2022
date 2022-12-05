@@ -11,7 +11,7 @@ public enum GameEdition
     [Description("Dungeons & Dragons 1st Edition")] DnD1E,
     [Description("Advanced Dungeons & Dragons 1st Edition")] ADnD1E,
     [Description("Advanced Dungeons & Dragons 2nd Edition")] ADnD2E,
-    [Description("Dungeons & Dragons 2nd Edition")] DnD3E,
+    [Description("Dungeons & Dragons 3rd Edition")] DnD3E,
     [Description("Dungeons & Dragons 4th Edition")] DnD4E,
     [Description("Dungeons & Dragons 5th Edition")] DnD5E
 }

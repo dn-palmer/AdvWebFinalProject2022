@@ -26,6 +26,7 @@ public class DnDDbRepository : IDnDRepository
             ["Id"] = $"{dungeonMaster.Id}",
             ["FirstName"] = $"{dungeonMaster.FirstName}",
             ["LastName"] = $"{dungeonMaster.LastName}",
+            ["Email"] = $"{dungeonMaster.Email}",
             ["YearsOfExperiance"] = $"{dungeonMaster.YearsOfExperiance}",
             ["DungeonAndDragons1E"] = $"{dungeonMaster.DungeonAndDragons1E}",
             ["AdvancedDnD1E"] = $"{dungeonMaster.AdvancedDnD1E}",
@@ -129,6 +130,7 @@ public class DnDDbRepository : IDnDRepository
             ["Id"] = $"{player.Id}",
             ["FirstName"] = $"{player.FirstName}",
             ["LastName"] = $"{player.LastName}",
+            ["Email"] = $"{player.Email}",
             ["YearsOfExperiance"] = $"{player.YearsOfExperiance}",
             ["DungeonAndDragons1E"] = $"{player.DungeonAndDragons1E}",
             ["AdvancedDnD1E"] = $"{player.AdvancedDnD1E}",
@@ -202,6 +204,7 @@ public class DnDDbRepository : IDnDRepository
             ["Id"] = $"{player.Id}",
             ["FirstName"] = $"{player.FirstName}",
             ["LastName"] = $"{player.LastName}",
+            ["Email"] = $"{player.Email}",
             ["YearsOfExperiance"] = $"{player.YearsOfExperiance}",
             ["DungeonAndDragons1E"] = $"{player.DungeonAndDragons1E}",
             ["AdvancedDnD1E"] = $"{player.AdvancedDnD1E}",
@@ -298,7 +301,10 @@ public class DnDDbRepository : IDnDRepository
 
         if (result.IsSuccessStatusCode)
         {
-            return campaign;
+            var allCampaigns = await ReadAllCampaignsAsync();
+            var c = allCampaigns.FirstOrDefault(c => c.CampaignName == campaign.CampaignName);
+
+            return c;
         }
 
         return null;
