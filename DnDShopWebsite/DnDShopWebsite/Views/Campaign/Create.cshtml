@@ -7,7 +7,7 @@
 
 <h1>Create A New Campaign</h1>
 
-<h4>This game will be ran by @Model.DungeonMaster.FirstName</h4>
+<h4>This game will be ran by @Model.DungeonMaster.FirstName @Model.DungeonMaster.LastName</h4>
 <hr />
 <div class="row">
     <div>
@@ -52,6 +52,7 @@
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@Model.DungeonMasterID" class="btn btn-warning">Go Back</a>
             </div>
         </form>
     </div>
@@ -59,7 +60,7 @@
 
 
 <div>
-    <a asp-action="Index">Back to List</a>
+   
 </div>
 
 @section Scripts {

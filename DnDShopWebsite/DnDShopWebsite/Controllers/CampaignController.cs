@@ -17,7 +17,7 @@ namespace DnDShopWebsite.Controllers
         }
         public async Task<IActionResult> Index()
         {
-           
+
             var campaigns = await _repo.ReadAllCampaignsAsync();
 
             var players = await _repo.ReadAllPlayersAsync();
@@ -46,8 +46,8 @@ namespace DnDShopWebsite.Controllers
                 Players = players,
                 UniqeCampaignNames = distinctCampaignNames,
                 AllCampaigns = campaigns,
-                CampaignCreationModal= campaignCreationModal,
-                CampaignPartialVM = campaignPartial                
+                CampaignCreationModal = campaignCreationModal,
+                CampaignPartialVM = campaignPartial
 
             };
 
@@ -55,6 +55,8 @@ namespace DnDShopWebsite.Controllers
 
             return View(model);
         }
+
+
 
         public async Task<IActionResult> Create(int id)
         {
@@ -73,7 +75,7 @@ namespace DnDShopWebsite.Controllers
             {
                 DungeonMasterID = id,
                 PlayerId = 0,
-                Players = playerList, 
+                Players = playerList,
                 DungeonMaster = dungeonMaster,
                 GameEdition = 0
             };
@@ -170,6 +172,8 @@ namespace DnDShopWebsite.Controllers
             return PartialView("/Views/Campaign/_CampaignCardsPartial.cshtml", model);
         }
 
+
+
         public async Task<IActionResult> AddPlayer(int dungeonMasterId, int campaignId)
         {
             var dungeonMaster = await _repo.ReadDMAsync(dungeonMasterId);
@@ -191,7 +195,7 @@ namespace DnDShopWebsite.Controllers
             var playerList = await _repo.ReadAllPlayersAsync();
 
             var allCampagins = await _repo.ReadAllCampaignsAsync();
-            var currentPlayersCampaigns = allCampagins.Where(c => c.CampaignName == campaign.CampaignName).ToList();
+            var currentPlayersCampaigns = dungeonMaster.Campaigns.Where(c => c.CampaignName == campaign.CampaignName).ToList();
             var nonPlayersCampaigns = allCampagins.Except(currentPlayersCampaigns).ToList();
 
             var nonPlayers = new List<Player>();
@@ -200,9 +204,13 @@ namespace DnDShopWebsite.Controllers
 
 
 
-            foreach (var player in nonPlayersCampaigns)
+            foreach (var player in playerList)
             {
-                nonPlayers.Add(await _repo.ReadPlayerAsync(player.PlayerId));
+                if (!dungeonMaster.Campaigns.Any(x=> x.PlayerId == player.Id))
+                {
+                    nonPlayers.Add(player);
+                }
+
             }
 
             foreach (var player in currentPlayersCampaigns)
@@ -216,11 +224,11 @@ namespace DnDShopWebsite.Controllers
                 DungeonMasterID = dungeonMasterId,
                 PlayerId = 0,
                 NonPlayers = nonPlayers,
-                CurrentPlayers= currentPlayers,
+                CurrentPlayers = currentPlayers,
                 DungeonMaster = dungeonMaster,
                 GameEdition = 0,
                 CampaignDescription = campaign.CampaignDescription,
-                CampaignName= campaign.CampaignName
+                CampaignName = campaign.CampaignName
             };
 
             return View(model);
@@ -287,10 +295,10 @@ namespace DnDShopWebsite.Controllers
             };
 
 
-            return View(model);  
+            return View(model);
         }
 
-     
+
         public async Task<IActionResult> DeletePlayerPost(int playerId, int campaignId)
         {
             var campaign = await _repo.ReadCampaignAsync(campaignId);
@@ -307,7 +315,7 @@ namespace DnDShopWebsite.Controllers
                 return RedirectToAction("Index", "Player");
             }
 
-            await _repo.RemoveCampaignFromPlayerAsync(playerId,campaignId);
+            await _repo.RemoveCampaignFromPlayerAsync(playerId, campaignId);
 
             return RedirectToAction("Details", "Player", new { Id = playerId });
 
@@ -344,7 +352,7 @@ namespace DnDShopWebsite.Controllers
                 DungeonMaster = dungeonMaster,
                 DungeonMasterId = dungeonMasterId,
                 Campaign = campaign,
-                CampaignId= campaignId,
+                CampaignId = campaignId,
                 AllPlayersInCampaign = currentPlayers
             };
 
@@ -371,11 +379,13 @@ namespace DnDShopWebsite.Controllers
             await _repo.RemoveCampaignFromDungeonMasterAsync(dungeonMasterId, campaignId);
 
 
-            return RedirectToAction("Details", "DungeonMaster", new {Id = dungeonMasterId});
+            return RedirectToAction("Details", "DungeonMaster", new { Id = dungeonMasterId });
 
 
         }
 
+
+        
         public async Task<IActionResult> Edit(int id)
         {
             var campaign = await _repo.ReadCampaignAsync(id);
@@ -409,38 +419,41 @@ namespace DnDShopWebsite.Controllers
 
         }
 
+
+        //For some reason this deletes campaiggns instead of updating them. The process works entirly and I can even see it updating in the api but it erases the
+        //entry none the less.
         [HttpPost]
         public async Task<IActionResult> Edit([FromForm] int campaignId, [FromForm] string campaignDescription, [FromForm] string campaignName, [FromForm] GameEdition gameEdition)
         {
             var orginalCampaign = await _repo.ReadCampaignAsync(campaignId);
 
-            if(orginalCampaign== null)
+            if (orginalCampaign == null)
             {
                 return RedirectToAction("Index", "Campaign");
             }
 
             var dungeonMaster = await _repo.ReadDMAsync(orginalCampaign.DungeonMasterId);
-        
+
 
             if (dungeonMaster == null)
             {
                 return RedirectToAction("Index", "DungeonMaster");
             }
 
-           
+
             var allCampagins = await _repo.ReadAllCampaignsAsync();
-            var currentPlayers = allCampagins.Where(c => c.CampaignName == orginalCampaign.CampaignName).ToList();
-           
+            var currentPlayers = allCampagins.Where(c => c.CampaignName == orginalCampaign.CampaignName && c.DungeonMasterId == orginalCampaign.DungeonMasterId).ToList();
+
 
             foreach (var campaignToUpdate in currentPlayers)
             {
                 campaignToUpdate.CampaignDescription = campaignDescription;
                 campaignToUpdate.CampaignName = campaignName;
-                campaignToUpdate.GameEdition= gameEdition;
+                campaignToUpdate.GameEdition = gameEdition;
                 await _repo.UpdateCampaignAsync(campaignToUpdate);
             }
-          
-            return RedirectToAction("Details", "DungeonMaster", new { id = orginalCampaign.DungeonMasterId });
+
+            return RedirectToAction("Index", "Campaign");
         }
 
     }

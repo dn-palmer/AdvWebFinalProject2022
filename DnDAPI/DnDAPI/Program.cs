@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IDnDRepository, DndDbRepository>();
 
-//Will need to adjust this once I am working on the web app
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(

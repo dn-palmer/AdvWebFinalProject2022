@@ -23,6 +23,10 @@
 
         <br>
 
+        <p>Contact Information: <br />  <br />@Model.Email</p>
+        <br />
+        <p>Years of Experiance: <br />  <br />@Model.YearsOfExperiance</p>
+
     </div>
 
     <div class="col">
@@ -65,7 +69,8 @@
 <br />
 <div class="row">
     <div class="col">
-        <a asp-action="Edit" asp-controller="Player" asp-route-id="@Model.Id" class="btn btn-primary text-md-center" style="width:12em; margin-right: .5em;height:4em; margin-left:30%;">Edit <br /> Player</a>
+        <a asp-action="Index" asp-controller="Campaign" class="btn btn-success" style="width:12em;margin-left:25%; margin-right: .5em;height:4em;">Browse <br /> Campaigns</a>
+        <a asp-action="Edit" asp-controller="Player" asp-route-id="@Model.Id" class="btn btn-primary text-md-center" style="width:12em; margin-right: .5em;height:4em;">Edit <br /> Player</a>
         <a asp-action="Delete" asp-controller="Player" asp-route-id="@Model.Id" class="btn btn-danger" style="width:12em; margin-right: .5em;height:4em;"> Delete <br /> Player</a>
     </div>
 </div>
