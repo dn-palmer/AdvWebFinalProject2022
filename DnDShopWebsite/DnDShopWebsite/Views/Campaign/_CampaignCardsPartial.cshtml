@@ -1,65 +1,52 @@
-﻿@model DnDShopWebsite.Models.ViewModels.CampaignCardPartialVM
+﻿
 
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
 @{
-    var campaign = Model.AllCampaigns.FirstOrDefault(c => c.CampaignName == Model.CurrentCampaignName);
 }
-
+@model CampaignCardPartialVM
 <div class="card bg-dark text-light border-light" style="width: 30em; float: left; margin-left: 5em; margin-bottom: 1em;">
     <div class="card-body">
+        @{
+            var campaignDes = Model.AllCampaigns.FirstOrDefault(x => x.CampaignName == Model.CurrentCampaignName);
+            
+        }
 
         <div class="row">
-            <h5 class="card-title" style="font-weight:bolder;">@Model.CurrentCampaignName</h5>
+            <h5 class="card-title">@campaignDes.CampaignName</h5>
         </div>
-
         <br />
+        <p>Game Edition: <br> @campaignDes.GameEdition.ToString()</p>
 
+        <p>Campaign Description: <br> @campaignDes.CampaignDescription</p>
+        <br />
+        Players:
         <div class="row">
-            <p style="font-weight:bolder;">Game Edition:</p>
-            <br />
-            <p>@campaign.GameEdition.ToString()</p>
-            <br />
-            <p style="font-weight:bolder;">Campaign Description:</p>
-            <br />
-            <p>@campaign.CampaignDescription</p>
-        </div>
-
-
-        <p style="font-weight:bolder;">Dungeon Master:</p>
-        <div class="row">
-            <div class="col">
-                <p>@campaign.DungeonMaster.FirstName @campaign.DungeonMaster.LastName</p>
-            </div>
-            <div class="col">
-                <a asp-action="Details" asp-controller="DungeonMaster" asp-route-id="@campaign.DungeonMasterId" class="btn btn-success" style="margin-right:.2em;">Details</a>
-            </div>
-        </div>
-
-
-        <p style="font-weight:bolder;">Players:</p>
-
-        @foreach (var c in Model.AllCampaigns)
-        {
-            if (c.CampaignName == Model.CurrentCampaignName)
+            @foreach (var campaign in Model.AllCampaigns)
             {
-                <div class="row">
+                if (campaignDes.CampaignName == campaign.CampaignName)
+                {
+                    <div class="row" style="margin-bottom: .5em;">
+                        <div class="col">
+                            <p>@campaign.Player.FirstName @campaign.Player.LastName</p>
+                        </div>
 
-                    <div class="col">
-                        <p style="margin-bottom: 1.5em;">@c.Player.FirstName @c.Player.LastName</p>
+                        <div class="col">
+                            <a asp-action="Details" asp-controller="Player" asp-route-id="@campaign.PlayerId" class="btn btn-success" style="margin-right:.2em;">Details</a>
+                            <a asp-action="DeletePlayer" asp-controller="Campaign" asp-route-playerId="@campaign.PlayerId" asp-route-campaignId="@campaign.Id" class="btn btn-danger" style="margin-right:.2em;">Remove</a>
+
+                        </div>
                     </div>
+                }
 
-                    <div class="col">
-                        <a asp-action="Details" asp-controller="Player" asp-route-id="@c.PlayerId" class="btn btn-success" style="margin-right:.2em;">Details</a>
-                        <a asp-action="DeletePlayer" asp-controller="Campaign" asp-route-playerId="@c.PlayerId" asp-route-campaignId="@c.Id" class="btn btn-danger" style="margin-right:.2em;">Remove</a>
-                    </div>
-
-                </div>
             }
 
-        }
+        </div>
         <br />
-        <a asp-action="AddPlayer" asp-controller="Campaign" asp-route-dungeonMasterId="@campaign.DungeonMasterId" asp-route-campaignId="@campaign.Id" class="btn btn-primary" style="margin-right:.2em;">Add Player</a>
-        <a asp-action="DeleteCampaign" asp-controller="Campaign" asp-route-dungeonMasterId="@campaign.DungeonMasterId" asp-route-campaignId="@campaign.Id" class="btn btn-danger" style="margin-right:.2em;">Delete Campaign</a>
-
-
+        <a asp-action="AddPlayer" asp-controller="Campaign" asp-route-dungeonMasterId="@campaignDes.DungeonMasterId" asp-route-campaignId="@campaignDes.Id" class="btn btn-primary" style="margin-right:.2em;">Add Player</a>
+        <a asp-action="Edit" asp-controller="Campaign"  asp-route-id="@campaignDes.Id" class="btn btn-success" style="margin-right:.2em;">Edit Campaign</a>
+        <a asp-action="DeleteCampaign" asp-controller="Campaign" asp-route-dungeonMasterId="@campaignDes.DungeonMasterId" asp-route-campaignId="@campaignDes.Id" class="btn btn-danger" style="margin-right:.2em;">Delete Campaign</a>
     </div>
 </div>

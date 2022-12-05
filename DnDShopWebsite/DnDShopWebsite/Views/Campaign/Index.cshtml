@@ -9,17 +9,19 @@
 
 <br>
 <br>
-<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createCampaignModal">Register A New Campaign</button>
+<button type="button" id="btnCreateCampaign" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createCampaignModal">Register A New Campaign</button>
 <partial name="_CreateCampaignModal" model="@Model.CampaignCreationModal" />
+<script type="module" src="~/js/campaignindex.js"></script>
 <br>
 <br>
 <br>
 
-<div class="row">
+<div id="campainCardsDiv" class="row">
 
     @foreach (var item in Model.UniqeCampaignNames)    {
         Model.CampaignPartialVM.CurrentCampaignName = item;
-        <partial name="_CampaignCardsPartial" model="@Model.CampaignPartialVM" />        
+        <partial name="_CampaignCardsPartial" model="@Model.CampaignPartialVM" />
+
     }
 </div>
 

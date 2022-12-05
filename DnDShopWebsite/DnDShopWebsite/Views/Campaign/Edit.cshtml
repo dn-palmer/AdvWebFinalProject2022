@@ -1,0 +1,72 @@
+﻿@model DnDShopWebsite.Models.ViewModels.EditCampaignVM
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Campaign</h1>
+
+<h4>This game will be ran by @Model.DungeonMaster.FirstName</h4>
+<hr />
+<div class="row">
+    <div>
+        <form asp-action="Edit" asp-controller="Campaign">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="input-group col" style="width:25em;float:left; margin-right: 10em;">
+                <span asp-for="CampaignName" class="input-group-text" id="inputGroup-sizing-default">Campaign Name</span>
+                <input asp-for="CampaignName" type="text" class="form-control" name="campaignName" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GameEdition" class="control-label"></label>
+                @Html.DropDownList("GameEdition",
+                Enum.GetValues(typeof(GameEdition)).Cast<GameEdition>().Select(x => new SelectListItem {Text = x.Description(), Value = x.ToString()}))
+                <span asp-validation-for="GameEdition" class="text-danger"></span>
+            </div>
+            <br />
+            <br />
+            <div class="input-group">
+                <span asp-for="CampaignDescription" class="input-group-text" id="inputGroup-sizing-default">Campain Description</span>
+                <input asp-for="CampaignDescription" type="text" class="form-control" name="campaignDescription" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+
+            <br />
+            <div class="row">
+                <label asp-for="CurrentPlayers" class="control-label"> Player List: </label>
+
+                <ul class="list-group">
+                    @foreach (var pl in Model.CurrentPlayers)
+                    {
+                        <li class="list-group-item bg-light text-dark" style="width:30em; margin-left:.1em;">@pl.FirstName @pl.LastName</li>
+                    }
+
+                </ul>
+
+            </div>
+
+            <br />
+            <div class="form-group">
+
+                <input asp-for="DungeonMaster" name="dungeonMasterId" class="form-control" value="@Model.DungeonMaster.Id" type="hidden" />
+                <input name="campaignId" value="@Model.CampaignId" type="hidden" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

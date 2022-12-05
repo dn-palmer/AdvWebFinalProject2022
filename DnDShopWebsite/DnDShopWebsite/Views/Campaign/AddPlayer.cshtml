@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "AddPlayer";
+
+    var distinctPlayerIds = Model.NonPlayers.Select(p => p.Id).Distinct().Except(Model.CurrentPlayers.Select(x=>x.Id));
+    bool notDisplayed = true;
 }
 
 <h1>Add a Player to @Model.CampaignName</h1>
@@ -53,12 +56,24 @@
 
                 <div class="col">
                     <label asp-for="PlayerId" class="control-label"> Possible New Player List (Please Select One): </label>
-                    @foreach (var p in Model.NonPlayers)
+                    @foreach (var p in distinctPlayerIds)
                     {
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" id="@p.Id" name="playerId" value="@p.Id" />
-                            <label class="form-check-label" asp-for="PlayerId">@p.FirstName @p.LastName</label>
-                        </div>
+                        notDisplayed = true;
+
+                        foreach(var n in Model.NonPlayers)
+                        {
+                            if(notDisplayed && n.Id == p)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="@n.Id" name="playerId" value="@n.Id" />
+                                    <label class="form-check-label" asp-for="PlayerId">@n.FirstName @n.LastName</label>
+                                </div>
+
+                                notDisplayed = false;
+                            }
+
+                        }
+
                     }
                 </div>
             </div>

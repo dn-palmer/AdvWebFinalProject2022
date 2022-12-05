@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace DnDShopWebsite.Controllers
 {
+    //Controller for the campaign aspects of the site it manages creating/deleted/updating/Viewing all campaigns. 
     public class CampaignController : Controller
     {
         private readonly IDnDRepository _repo;
@@ -115,8 +116,60 @@ namespace DnDShopWebsite.Controllers
             return RedirectToAction("Details", "DungeonMaster", new { id = dungeonMasterId });
         }
 
-        
-        
+
+        //Creates the campaign from the modal in the campains index.
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateModal([FromForm] int playerId, [FromForm] int dungeonMasterId, [FromForm] string campaignDescription, [FromForm] string campaignName, [FromForm] GameEdition gameEdition)
+        {
+            var player = await _repo.ReadPlayerAsync(playerId);
+
+            if (player == null)
+            {
+                return RedirectToAction("Index", "Player");
+            }
+
+            var dungeonMaster = await _repo.ReadDMAsync(dungeonMasterId);
+
+            if (dungeonMaster == null)
+            {
+                return RedirectToAction("Index", "DungeonMaster");
+            }
+
+            var newCampaign = new Campaign
+            {
+                CampaignName = campaignName,
+                CampaignDescription = campaignDescription,
+                GameEdition = gameEdition,
+                DungeonMasterId = dungeonMaster.Id,
+                PlayerId = player.Id,
+                DungeonMaster = dungeonMaster,
+                Player = player
+            };
+
+
+            var c = await _repo.CreateCampaignAsync(newCampaign);
+
+            return Json(new { campaignId = c.Id, message = "success" });
+        }
+
+        //Adds a card to the View after the creation with Ajax
+        public async Task<IActionResult> AddCard(int id)
+        {
+            var campaign = await _repo.ReadCampaignAsync(id);
+
+            var model = new CampaignCardPartialVM
+            {
+                CurrentCampaignName = campaign.CampaignName,
+                AllCampaigns = await _repo.ReadAllCampaignsAsync(),
+                DungeonMasters = await _repo.ReadAllDMAsync(),
+                Players = await _repo.ReadAllPlayersAsync(),
+            };
+
+            return PartialView("/Views/Campaign/_CampaignCardsPartial.cshtml", model);
+        }
+
         public async Task<IActionResult> AddPlayer(int dungeonMasterId, int campaignId)
         {
             var dungeonMaster = await _repo.ReadDMAsync(dungeonMasterId);
@@ -323,7 +376,72 @@ namespace DnDShopWebsite.Controllers
 
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var campaign = await _repo.ReadCampaignAsync(id);
 
+            if (campaign == null)
+            {
+                return RedirectToAction("Index", "Campaign");
+            }
+
+            var allCampagins = await _repo.ReadAllCampaignsAsync();
+            var currentPlayersCampaigns = allCampagins.Where(c => c.CampaignName == campaign.CampaignName).ToList();
+            var currentPlayers = new List<Player>();
+
+            foreach (var player in currentPlayersCampaigns)
+            {
+                currentPlayers.Add(await _repo.ReadPlayerAsync(player.PlayerId));
+            }
+
+            var model = new EditCampaignVM
+            {
+                DungeonMaster = campaign.DungeonMaster,
+                CampaignDescription = campaign.CampaignDescription,
+                CampaignName = campaign.CampaignName,
+                CurrentPlayers = currentPlayers,
+                GameEdition = campaign.GameEdition,
+                CampaignId = campaign.Id
+            };
+
+            return View(model);
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] int campaignId, [FromForm] string campaignDescription, [FromForm] string campaignName, [FromForm] GameEdition gameEdition)
+        {
+            var orginalCampaign = await _repo.ReadCampaignAsync(campaignId);
+
+            if(orginalCampaign== null)
+            {
+                return RedirectToAction("Index", "Campaign");
+            }
+
+            var dungeonMaster = await _repo.ReadDMAsync(orginalCampaign.DungeonMasterId);
+        
+
+            if (dungeonMaster == null)
+            {
+                return RedirectToAction("Index", "DungeonMaster");
+            }
+
+           
+            var allCampagins = await _repo.ReadAllCampaignsAsync();
+            var currentPlayers = allCampagins.Where(c => c.CampaignName == orginalCampaign.CampaignName).ToList();
+           
+
+            foreach (var campaignToUpdate in currentPlayers)
+            {
+                campaignToUpdate.CampaignDescription = campaignDescription;
+                campaignToUpdate.CampaignName = campaignName;
+                campaignToUpdate.GameEdition= gameEdition;
+                await _repo.UpdateCampaignAsync(campaignToUpdate);
+            }
+          
+            return RedirectToAction("Details", "DungeonMaster", new { id = orginalCampaign.DungeonMasterId });
+        }
 
     }
 }

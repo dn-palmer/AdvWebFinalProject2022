@@ -6,6 +6,7 @@ using System.Drawing;
 
 namespace DnDShopWebsite.Controllers
 {
+    //Controller for the dungeon master aspects of the site it manages creating/deleted/updating all DM's. 
     public class DungeonMasterController : Controller
     {
         private readonly IDnDRepository _repo;

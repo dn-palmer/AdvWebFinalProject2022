@@ -298,7 +298,10 @@ public class DnDDbRepository : IDnDRepository
 
         if (result.IsSuccessStatusCode)
         {
-            return campaign;
+            var allCampaigns = await ReadAllCampaignsAsync();
+            var c = allCampaigns.FirstOrDefault(c => c.CampaignName == campaign.CampaignName);
+
+            return c;
         }
 
         return null;
